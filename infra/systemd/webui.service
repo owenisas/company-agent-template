@@ -1,5 +1,5 @@
 [Unit]
-Description=Company agent webui (reserved)
+Description=Company agent webui
 After=network-online.target
 Wants=network-online.target
 
@@ -8,10 +8,12 @@ Type=simple
 User=<service-user>
 Group=<service-user>
 WorkingDirectory=/opt/company-agent/webui
-EnvironmentFile=-/opt/company-agent/infra/.env
-# ExecStart=/usr/local/bin/company-webui
-ExecStart=/bin/true
+EnvironmentFile=-/opt/company-agent/webui/runtime/webui.env
+Environment=WEBUI_PORT=8080
+Environment=WEBUI_BIND=0.0.0.0
+ExecStart=/opt/company-agent/webui/run.sh
 Restart=on-failure
+RestartSec=5
 NoNewPrivileges=true
 PrivateTmp=true
 

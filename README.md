@@ -21,7 +21,7 @@ A publishable starting tree:
 - `skills/onboarding/` — employee `USER.md` onboarding skill
 - `infra/` — Compose + systemd unit templates
 - `scripts/` — VPS bootstrap and Pi→VPS migrate helper
-- `webui/` — reserved (next step)
+- `webui/` — login-protected profile chat (runtime users, not in git)
 
 ## Layout
 

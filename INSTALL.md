@@ -125,16 +125,22 @@ before writing `memories/USER.md`.
 
 ## WebUI login bootstrap
 
-`webui/` is reserved. Until that lands:
+See `webui/README.md`. Short path:
 
-1. Bind the Hermes gateway to localhost or a private interface only.
-2. Issue a unique gateway/API identity per profile.
-3. First human login MUST use company identity + MFA (D035).
-4. Record the bootstrap admin in the user-role registry. Do not leave a
-   default password.
+```bash
+cd /opt/company-agent/webui
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+install -m 600 /dev/null runtime/users.json
+.venv/bin/python -m backend.passwd '<admin>' \
+  --role admin --profile default --write
+./install-webui-service.sh
+systemctl --user start hermes-webui.service
+```
 
-When the webui service exists, create the first owner account via the
-documented bootstrap command in `webui/README.md` and rotate it.
+Record the first owner in the user-role registry. Rotate the bootstrap
+password. Do not commit `runtime/users.json`. D035 (company identity +
+MFA) remains open; this local username/password gate is the Phase-1
+host login, not the long-term IdP.
 
 ## First-run checks
 

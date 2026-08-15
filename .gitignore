@@ -53,5 +53,12 @@ attachments/
 spec/*.pdf
 *.pdf
 
+# WebUI host state
+webui/.venv/
+webui/runtime/users.json
+webui/runtime/secret
+webui/runtime/webui.env
+webui/runtime/jobs/
+
 # OS
 .DS_Store

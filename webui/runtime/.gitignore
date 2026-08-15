@@ -1,0 +1,5 @@
+# Runtime files generated on the host. Do not commit secrets or job logs.
+*
+!.gitignore
+!USERS.example.json
+!webui.env.EXAMPLE

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Company agent</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <section id="login" class="login" aria-labelledby="login-title">
+    <form id="login-form" class="login-form" method="post" action="/api/login">
+      <p class="brand">Company agent</p>
+      <h1 id="login-title">Sign in</h1>
+      <p class="lede">Use the account issued for this host. Your session stays on this machine.</p>
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+      <p id="login-error" class="form-error" role="alert"></p>
+      <button type="submit" class="btn-primary">Sign in</button>
+    </form>
+  </section>
+
+  <div id="app" class="app" hidden>
+    <aside class="rail" aria-label="Workspace">
+      <p class="brand">Company agent</p>
+      <nav class="nav" aria-label="Sections">
+        <button type="button" class="nav-item is-active" data-view="chat">Chat</button>
+        <button type="button" class="nav-item" data-view="usage">Usage</button>
+      </nav>
+      <div class="rail-block">
+        <p class="rail-label">Profile</p>
+        <select id="profile-select" aria-label="Active profile"></select>
+      </div>
+      <div class="rail-foot">
+        <p id="who" class="who"></p>
+        <button type="button" id="logout" class="btn-quiet">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section id="view-chat" class="view view-chat" aria-labelledby="chat-heading">
+        <header class="main-head">
+          <h2 id="chat-heading">Chat</h2>
+          <p id="chat-sub" class="main-sub">Choose a profile and send a message.</p>
+        </header>
+        <ol id="thread" class="thread" aria-live="polite"></ol>
+        <form id="chat-form" class="composer">
+          <label class="sr-only" for="message">Message</label>
+          <textarea id="message" name="message" rows="3" required placeholder="Write to the selected profile"></textarea>
+          <div class="composer-row">
+            <p id="chat-status" class="status" aria-live="polite"></p>
+            <button type="submit" class="btn-primary" id="send">Send</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="view-usage" class="view view-usage" hidden aria-labelledby="usage-heading">
+        <header class="main-head">
+          <h2 id="usage-heading">Usage</h2>
+          <p class="main-sub">Token totals for profiles you can access. Read from the host session store.</p>
+        </header>
+        <div class="table-wrap">
+          <table class="usage-table">
+            <thead>
+              <tr>
+                <th scope="col">Profile</th>
+                <th scope="col" class="num">Input</th>
+                <th scope="col" class="num">Output</th>
+                <th scope="col" class="num">Reasoning</th>
+                <th scope="col" class="num">Total</th>
+                <th scope="col" class="num">Calls</th>
+              </tr>
+            </thead>
+            <tbody id="usage-body"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "users": [
+    {
+      "username": "<admin>",
+      "role": "admin",
+      "profile": "default",
+      "algo": "pbkdf2_sha256",
+      "iterations": 210000,
+      "salt": "replace-with-python3-m-backend.passwd",
+      "password_hash": "replace-with-python3-m-backend.passwd"
+    },
+    {
+      "username": "<employee-a>",
+      "role": "viewer",
+      "profile": "employee-a",
+      "algo": "pbkdf2_sha256",
+      "iterations": 210000,
+      "salt": "replace-with-python3-m-backend.passwd",
+      "password_hash": "replace-with-python3-m-backend.passwd"
+    },
+    {
+      "username": "<employee-b>",
+      "role": "viewer",
+      "profile": "employee-b",
+      "algo": "pbkdf2_sha256",
+      "iterations": 210000,
+      "salt": "replace-with-python3-m-backend.passwd",
+      "password_hash": "replace-with-python3-m-backend.passwd"
+    },
+    {
+      "username": "<employee-c>",
+      "role": "viewer",
+      "profile": "employee-c",
+      "algo": "pbkdf2_sha256",
+      "iterations": 210000,
+      "salt": "replace-with-python3-m-backend.passwd",
+      "password_hash": "replace-with-python3-m-backend.passwd"
+    }
+  ]
+}
