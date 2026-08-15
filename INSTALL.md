@@ -175,20 +175,22 @@ host login, not the long-term IdP.
 
 ## Moving a Pi one-host install to this VPS
 
-See `scripts/migrate-from-pi.sh` (`--dry-run` is the default; `--apply`
-to copy). Generic rsync of profiles, env, data dirs, the company
-dashboard-auth plugin, built `hermes_cli/web_dist/`, and the
-`hermes-dashboard` / `hermes-serve` user units. Review D050 before
-mapping legacy profiles onto `employee-*`.
+The ordered cutover runbook is `docs/MIGRATION-VPS.md`. See
+`scripts/migrate-from-pi.sh` (`--dry-run` is the default; `--apply`
+to copy). Generic rsync of profiles (minus `.env`/`auth.json`), env
+sidecars, data dirs, the company dashboard-auth plugin, built
+`hermes_cli/web_dist/`, and the `hermes-desktop-web` / `hermes-serve`
+user units. Review D050 before mapping legacy profiles onto `employee-*`.
 
-### Dashboard + serve split (carry per-person login)
+### Desktop-web + serve split (carry per-person login)
 
 A current one-host appliance typically runs two systemd **user** units
-(linger enabled):
+(linger enabled). The retired `hermes-dashboard.service` (:9119) is not
+part of the VPS cutover.
 
 | Unit | Command | Role |
 |---|---|---|
-| `hermes-dashboard.service` | `hermes dashboard --host 0.0.0.0 --port 9119 --skip-build --no-open` | browser UI |
+| `hermes-desktop-web.service` | `serve-web.py --port 9121 --backend http://127.0.0.1:9120` | browser UI |
 | `hermes-serve.service` | `hermes serve --host 0.0.0.0 --port 9120 --skip-build` | headless backend |
 
 Per-person dashboard login is the `company` DashboardAuthProvider:
@@ -218,7 +220,7 @@ user, then:
 
 ```bash
 systemctl --user daemon-reload
-systemctl --user enable --now hermes-dashboard.service hermes-serve.service
+systemctl --user enable --now hermes-desktop-web.service hermes-serve.service
 loginctl enable-linger "$USER"
 ```
 

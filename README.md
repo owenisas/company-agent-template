@@ -20,6 +20,8 @@ A publishable starting tree:
   connectors). Credential-free scaffold.
 - `skills/onboarding/` — employee `USER.md` onboarding skill
 - `infra/` — Compose + systemd unit templates
+- `infra/vps/` — Ubuntu VPS bootstrap + Phase 2 knowledge Compose stack
+- `docs/MIGRATION-VPS.md` — appliance → VPS cutover runbook
 - `scripts/` — VPS bootstrap and Pi→VPS migrate helper
 - `webui/` — login-protected profile chat (runtime users, not in git)
 

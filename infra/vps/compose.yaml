@@ -1,0 +1,205 @@
+# Phase 2 knowledge stack for the VPS.
+# Secrets come from .env via ${VAR} — never commit real values.
+# Postgres + pgvector is Docker-based (not host apt).
+#
+#   cp .env.EXAMPLE .env && chmod 600 .env
+#   docker compose --env-file .env up -d
+#
+# Default embeddings (see docs/MIGRATION-VPS.md):
+#   EMBEDDING_PROVIDER=openai
+#   EMBEDDING_MODEL=text-embedding-3-small
+#   EMBEDDING_DIMENSIONS=1536
+
+name: company-knowledge
+
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.6-pg18-bookworm
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../../services/migrations:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  knowledge-api:
+    build:
+      context: ../../services
+      dockerfile: Dockerfile
+    command:
+      [
+        "uvicorn",
+        "apps.knowledge_api.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8081",
+      ]
+    env_file: [.env]
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      NOTION_API_TOKEN: ${NOTION_API_TOKEN}
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL}
+      EMBEDDING_DIMENSIONS: ${EMBEDDING_DIMENSIONS}
+      EMBEDDING_API_KEY: ${EMBEDDING_API_KEY}
+    ports:
+      - "127.0.0.1:${KNOWLEDGE_API_PORT:-8081}:8081"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8081/health')",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+    restart: unless-stopped
+
+  knowledge-worker:
+    build:
+      context: ../../services
+      dockerfile: Dockerfile
+    command:
+      [
+        "python",
+        "-c",
+        "import time; from apps.knowledge_worker.main import run_loop_once;\nwhile True:\n    print(run_loop_once(), flush=True)\n    time.sleep(int(__import__('os').environ.get('WORKER_POLL_SECONDS', '30')))\n",
+      ]
+    env_file: [.env]
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      NOTION_API_TOKEN: ${NOTION_API_TOKEN}
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL}
+      EMBEDDING_DIMENSIONS: ${EMBEDDING_DIMENSIONS}
+      EMBEDDING_API_KEY: ${EMBEDDING_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "from apps.knowledge_worker.main import run_loop_once; run_loop_once()",
+        ]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+    restart: unless-stopped
+
+  knowledge-mcp:
+    build:
+      context: ../../services
+      dockerfile: Dockerfile
+    command:
+      [
+        "uvicorn",
+        "apps.knowledge_mcp.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8082",
+      ]
+    env_file: [.env]
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      NOTION_API_TOKEN: ${NOTION_API_TOKEN}
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL}
+      EMBEDDING_DIMENSIONS: ${EMBEDDING_DIMENSIONS}
+      EMBEDDING_API_KEY: ${EMBEDDING_API_KEY}
+    ports:
+      - "127.0.0.1:${KNOWLEDGE_MCP_PORT:-8082}:8082"
+    depends_on:
+      knowledge-api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8082/health')",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+    restart: unless-stopped
+
+  approval-api:
+    build:
+      context: ../../services
+      dockerfile: Dockerfile
+    command:
+      [
+        "uvicorn",
+        "apps.approval_api.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "8083",
+      ]
+    env_file: [.env]
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - "127.0.0.1:${APPROVAL_API_PORT:-8083}:8083"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8083/health')",
+        ]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+    restart: unless-stopped
+
+  audit-consumer:
+    build:
+      context: ../../services
+      dockerfile: Dockerfile
+    command:
+      [
+        "python",
+        "-c",
+        "import time; from apps.audit_consumer.main import main;\nwhile True:\n    main()\n    time.sleep(int(__import__('os').environ.get('AUDIT_POLL_SECONDS', '30')))\n",
+      ]
+    env_file: [.env]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "from apps.audit_consumer.main import export_configured; export_configured()",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

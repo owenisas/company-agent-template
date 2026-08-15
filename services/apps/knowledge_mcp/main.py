@@ -13,6 +13,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from fastapi import FastAPI
+
 from packages.authz.principals import parse_principal
 from packages.knowledge.ingestion import bulk_import_dry_run
 from packages.knowledge.retrieval import hybrid_search_stub
@@ -77,6 +79,33 @@ def dispatch(tool: str, ctx: RequestContext | None, **kwargs: Any) -> dict[str, 
     if tool not in HANDLERS:
         return {"status": "deny", "reason": "unknown_capability", "tool": tool}
     return HANDLERS[tool](ctx, **kwargs)
+
+
+def create_app() -> FastAPI:
+    """HTTP health surface so Compose can keep this process up (Phase 2)."""
+    app = FastAPI(
+        title="<Company> knowledge-mcp",
+        version="0.2.0-scaffold",
+        description="Phase 2 scaffold — tool dispatch is still in-process.",
+    )
+
+    @app.get("/health")
+    def health() -> dict[str, Any]:
+        return {
+            "status": "ok",
+            "service": "knowledge-mcp",
+            "phase": "2-scaffold",
+            "tools": list(TOOLS),
+        }
+
+    @app.get("/")
+    def root() -> dict[str, Any]:
+        return {"service": "knowledge-mcp", "status": "scaffold", "tools": list(TOOLS)}
+
+    return app
+
+
+app = create_app()
 
 
 def main() -> None:
