@@ -1,0 +1,223 @@
+/* Operate surface — same clay tokens as the company webui.
+   No gradients, no glow, no pill buttons, no default all-around shadows. */
+
+:root {
+  --bg: #1c1916;
+  --bg-raised: #26211c;
+  --bg-sunken: #141210;
+  --ink: #f1e9e0;
+  --ink-dim: #b4a89d;
+  --ink-faint: #87786d;
+  --line: #3b332c;
+  --accent: #b56d4a;
+  --accent-press: #9e5d3e;
+  --accent-ink: #1c1916;
+  --bad: #c45c52;
+  --ok: #8a9a6a;
+  --font: "Segoe UI", "Helvetica Neue", ui-sans-serif, sans-serif;
+  --mono: ui-monospace, "Cascadia Mono", "Segoe UI Mono", Menlo, Consolas, monospace;
+  --radius: 6px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  padding: 1.1rem 1rem 2rem;
+}
+
+.head {
+  margin: 0 0 1.1rem;
+}
+
+.brand {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+h2 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink-dim);
+}
+
+.lede,
+.hint,
+.page-meta {
+  margin: 0 0 0.85rem;
+  color: var(--ink-dim);
+  font-size: 0.875rem;
+}
+
+.hint,
+.page-meta {
+  margin-bottom: 0;
+}
+
+.card {
+  margin: 0 0 0.9rem;
+  padding: 0.9rem 0.85rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-raised);
+}
+
+label {
+  display: block;
+  margin: 0 0 0.3rem;
+  font-size: 0.75rem;
+  color: var(--ink-dim);
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+  display: block;
+  width: 100%;
+  margin: 0 0 0.75rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-sunken);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 5rem;
+  margin-bottom: 0.65rem;
+}
+
+input:focus,
+textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btn-primary,
+.btn-quiet {
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.4rem;
+  padding: 0 0.95rem;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn-primary:hover {
+  background: var(--accent-press);
+  border-color: var(--accent-press);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-quiet {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-dim);
+  font-weight: 500;
+  min-height: 2.4rem;
+}
+
+.btn-quiet:hover {
+  color: var(--ink);
+}
+
+.status {
+  margin: 0.55rem 0 0;
+  color: var(--ink-faint);
+  font-size: 0.8rem;
+}
+
+.status.is-bad {
+  color: var(--bad);
+}
+
+.status.is-ok {
+  color: var(--ok);
+}
+
+.answer {
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
+.answer-body {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.9rem;
+}
+
+.answer-body code {
+  font-family: var(--mono);
+  font-size: 0.82em;
+  background: var(--bg-sunken);
+  padding: 0.05em 0.3em;
+}
+
+.answer-body strong {
+  font-weight: 650;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary:active {
+    transform: none;
+  }
+}

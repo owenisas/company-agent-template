@@ -26,6 +26,10 @@
 #   tests/test_no_secrets_in_context.py shared credential never in context
 #   tests/test_readonly_mcps.py        GitHub/CRM MCP stubs
 #   tests/test_connectors.py           Notion + future-connector registry
+#   tests/test_notion_oauth.py         OAuth state, refresh rotation lock
+#   tests/test_notion_client.py        headers, pagination, no token leak
+#   tests/test_notion_collab.py        allowlist, not_configured, preview/apply
 #
 # Recorded results: tests/PHASE-2-SCAFFOLD-TESTS.txt
 #                   tests/PHASE-3-SCAFFOLD-TESTS.txt
+#                   tests/NOTION-SCAFFOLD-TESTS.txt

@@ -17,6 +17,11 @@
   var usageBody = document.getElementById("usage-body");
   var viewChat = document.getElementById("view-chat");
   var viewUsage = document.getElementById("view-usage");
+  var viewNotion = document.getElementById("view-notion");
+  var notionStatus = document.getElementById("notion-status");
+  var notionDetail = document.getElementById("notion-detail");
+  var notionConnect = document.getElementById("notion-connect");
+  var notionDisconnect = document.getElementById("notion-disconnect");
 
   function api(path, options) {
     options = options || {};
@@ -123,14 +128,43 @@
     });
   }
 
+  function loadNotion() {
+    return api("/api/notion/status").then(function (data) {
+      if (data.connected) {
+        notionStatus.textContent = "Connected to " + (data.workspace_name || "a Notion workspace") + ".";
+        notionDetail.textContent = data.owner_name
+          ? "Authorized by " + data.owner_name + "."
+          : "Server holds the grant. The browser never sees the token.";
+        notionConnect.hidden = true;
+        notionDisconnect.hidden = false;
+        return;
+      }
+      notionConnect.hidden = false;
+      notionDisconnect.hidden = true;
+      if (!data.configured) {
+        notionStatus.textContent = "Not configured.";
+        notionDetail.textContent = "Set NOTION_CLIENT_ID, NOTION_CLIENT_SECRET, and NOTION_REDIRECT_URI. See docs/notion-setup.md.";
+        notionConnect.classList.add("is-disabled");
+        return;
+      }
+      notionStatus.textContent = "Not connected.";
+      notionDetail.textContent = "Connect a workspace. You will pick pages on Notion's consent screen.";
+      notionConnect.classList.remove("is-disabled");
+    });
+  }
+
   function switchView(name) {
     viewChat.hidden = name !== "chat";
     viewUsage.hidden = name !== "usage";
+    if (viewNotion) viewNotion.hidden = name !== "notion";
     document.querySelectorAll(".nav-item").forEach(function (btn) {
       btn.classList.toggle("is-active", btn.getAttribute("data-view") === name);
     });
     if (name === "usage") loadUsage().catch(function (err) {
       setStatus(err.message, true);
+    });
+    if (name === "notion") loadNotion().catch(function (err) {
+      notionStatus.textContent = err.message || "Could not load Notion status.";
     });
   }
 
@@ -139,6 +173,18 @@
       switchView(btn.getAttribute("data-view"));
     });
   });
+
+  if (notionDisconnect) {
+    notionDisconnect.addEventListener("click", function () {
+      api("/api/notion/disconnect", { method: "POST" })
+        .then(function () {
+          return loadNotion();
+        })
+        .catch(function (err) {
+          notionStatus.textContent = err.message || "Disconnect failed.";
+        });
+    });
+  }
 
   profileSelect.addEventListener("change", function () {
     chatSub.textContent = "Sending as " + profileSelect.value + ".";
@@ -225,6 +271,13 @@
     .then(function (who) {
       showApp(who);
       return loadProfiles(who.profile);
+    })
+    .then(function () {
+      var params = new URLSearchParams(window.location.search);
+      if (params.get("notion")) {
+        switchView("notion");
+        loadNotion();
+      }
     })
     .catch(function () {
       showLogin("");

@@ -60,5 +60,13 @@ def hermes_home() -> Path:
     return Path.home() / ".hermes"
 
 
+def notion_client_id() -> str:
+    return os.environ.get("NOTION_CLIENT_ID", "").strip()
+
+
+def notion_redirect_uri() -> str:
+    return os.environ.get("NOTION_REDIRECT_URI", "http://127.0.0.1:8080/auth/notion/callback").strip()
+
+
 def secure_cookie() -> bool:
     return os.environ.get("WEBUI_SECURE_COOKIE", "").strip().lower() in {"1", "true", "yes"}

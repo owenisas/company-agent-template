@@ -61,6 +61,14 @@ class Scope:
     DISCORD_READ = "discord.channel.read"
     DISCORD_SEND = "discord.message.send"
 
+    # --- Notion collaboration (public OAuth; server-held token) ---
+    NOTION_READ_PAGE = "notion.read_page"
+    NOTION_SEARCH = "notion.search"
+    NOTION_QUERY_DATABASE = "notion.query_database"
+    NOTION_CREATE_PAGE = "notion.create_page"
+    NOTION_APPEND_BLOCKS = "notion.append_blocks"
+    NOTION_UPDATE_PAGE_PROPERTY = "notion.update_page_property"
+
     # --- approval / audit / admin ---
     APPROVAL_REQUEST = "approval.request"
     APPROVAL_DECIDE = "approval.decide"
@@ -87,6 +95,8 @@ class Scope:
     CONN_EMAIL = "company/email-platform"
     CONN_SOCIAL = "company/social-brand"
     CONN_DISCORD = "company/discord-gateway"
+    CONN_NOTION_OAUTH = "company/notion-oauth"
+    CONN_NOTION_OAUTH_PREFIX = "user:*/notion-oauth"
 
 
 # Read scopes per inventoried connection (R0 default).
@@ -101,6 +111,7 @@ CONNECTION_READ_SCOPES: dict[str, str] = {
     Scope.CONN_SOCIAL: Scope.PUBLISHING_READ,
     Scope.CONN_DISCORD: Scope.DISCORD_READ,
     Scope.CONN_APPROVAL_API: Scope.APPROVAL_REQUEST,
+    Scope.CONN_NOTION_OAUTH: Scope.NOTION_READ_PAGE,
 }
 
 # Write / approve scopes by risk tier (matrix §3).
@@ -117,6 +128,9 @@ WRITE_SCOPES_BY_TIER: dict[RiskTier, frozenset[str]] = {
             Scope.PUBLISHING_READ,
             Scope.DISCORD_READ,
             Scope.AUDIT_READ,
+            Scope.NOTION_READ_PAGE,
+            Scope.NOTION_SEARCH,
+            Scope.NOTION_QUERY_DATABASE,
         }
     ),
     RiskTier.R1: frozenset(
@@ -132,6 +146,9 @@ WRITE_SCOPES_BY_TIER: dict[RiskTier, frozenset[str]] = {
             Scope.PUBLISHING_SEND,
             Scope.DISCORD_SEND,
             Scope.KNOWLEDGE_PROMOTE_CLAIM,
+            Scope.NOTION_CREATE_PAGE,
+            Scope.NOTION_APPEND_BLOCKS,
+            Scope.NOTION_UPDATE_PAGE_PROPERTY,
         }
     ),
     RiskTier.R3: frozenset(
@@ -166,6 +183,7 @@ EMPLOYEE_ONLY_SCOPES: frozenset[str] = frozenset(
         "user:employee-b/restricted",
         "user:employee-c/restricted",
         Scope.CONN_GITHUB_OAUTH_PREFIX,
+        Scope.CONN_NOTION_OAUTH_PREFIX,
     }
 )
 
@@ -187,6 +205,8 @@ def is_employee_scope(scope: str) -> bool:
     if scope.startswith("user:"):
         return True
     if "github-oauth" in scope:
+        return True
+    if "notion-oauth" in scope:
         return True
     return False
 

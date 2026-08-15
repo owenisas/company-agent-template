@@ -31,6 +31,9 @@ SAFE_DEFAULTS: dict[str, Any] = {
     "otel_exporter_otlp_endpoint": "",
     "auth_issuer": "",
     "auth_audience": "company-agent",
+    "notion_client_id": "",
+    "notion_client_secret": "",
+    "notion_redirect_uri": "",
     "principal_id": "",
     "purpose": "",
     "request_id": "",
@@ -49,6 +52,9 @@ FILE_KEYS = {
     "OTEL_EXPORTER_OTLP_ENDPOINT": "otel_exporter_otlp_endpoint",
     "AUTH_ISSUER": "auth_issuer",
     "AUTH_AUDIENCE": "auth_audience",
+    "NOTION_CLIENT_ID": "notion_client_id",
+    "NOTION_CLIENT_SECRET": "notion_client_secret",
+    "NOTION_REDIRECT_URI": "notion_redirect_uri",
 }
 
 REQUEST_OVERRIDE_KEYS = frozenset({"principal_id", "purpose", "request_id", "trace_id"})
@@ -69,6 +75,9 @@ class Settings(BaseModel):
     otel_exporter_otlp_endpoint: str = ""
     auth_issuer: str = ""
     auth_audience: str = "company-agent"
+    notion_client_id: str = ""
+    notion_client_secret: str = ""
+    notion_redirect_uri: str = ""
     principal_id: str = ""
     purpose: str = ""
     request_id: str = ""
@@ -82,6 +91,10 @@ class Settings(BaseModel):
     @property
     def embeddings_configured(self) -> bool:
         return bool(self.embedding_provider and self.embedding_model and self.embedding_dimensions)
+
+    @property
+    def notion_oauth_configured(self) -> bool:
+        return bool(self.notion_client_id and self.notion_client_secret and self.notion_redirect_uri)
 
 
 def parse_env_file(path: str | Path) -> dict[str, str]:

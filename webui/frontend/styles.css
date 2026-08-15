@@ -354,6 +354,16 @@ textarea {
   overflow: auto;
 }
 
+.panel {
+  padding: 1.25rem var(--gutter) 2rem;
+  max-width: 36rem;
+}
+
+.btn-primary.is-disabled {
+  pointer-events: none;
+  opacity: 0.55;
+}
+
 .usage-table {
   width: 100%;
   border-collapse: collapse;

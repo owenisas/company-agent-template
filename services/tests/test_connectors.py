@@ -6,6 +6,7 @@ from packages.connections.reference import contains_credential_value
 from packages.connectors import (
     CONNECTOR_REGISTRY,
     DEFAULT_CONNECTOR,
+    DEFAULT_NOTION_COLLAB_CONNECTOR,
     DEFAULT_NOTION_CONNECTOR,
     FUTURE_CONNECTORS,
 )
@@ -76,6 +77,7 @@ def test_no_credential_value_in_any_connector_object():
     objects = [
         DEFAULT_CONNECTOR,
         DEFAULT_NOTION_CONNECTOR,
+        DEFAULT_NOTION_COLLAB_CONNECTOR,
         NotionReadOnlyConnector(),
         CONNECTOR_REGISTRY,
         FUTURE_CONNECTORS,

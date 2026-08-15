@@ -19,6 +19,7 @@ from .config import (
     secure_cookie,
     webui_port,
 )
+from .notion_api import register_notion_routes
 from .usage import usage_for_profiles
 
 
@@ -55,6 +56,8 @@ def create_app() -> FastAPI:
         if not record:
             raise HTTPException(status_code=401, detail="unknown user")
         return record
+
+    register_notion_routes(app, Depends(current_user))
 
     @app.get("/api/health")
     def health() -> dict[str, Any]:

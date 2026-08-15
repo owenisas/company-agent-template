@@ -67,3 +67,42 @@ capabilities:
     risk: critical
     groups: []
     effect: deny
+
+  notion.read_page:
+    risk: low
+    groups: [all-employees]
+    connections: [company/notion-oauth, "user:*/notion-oauth"]
+    approval: none
+
+  notion.search:
+    risk: low
+    groups: [all-employees]
+    connections: [company/notion-oauth, "user:*/notion-oauth"]
+    approval: none
+
+  notion.query_database:
+    risk: low
+    groups: [all-employees]
+    connections: [company/notion-oauth, "user:*/notion-oauth"]
+    approval: none
+
+  notion.create_page:
+    risk: medium
+    groups: [all-employees]
+    connections: ["user:*/notion-oauth", company/notion-oauth]
+    approval: named
+    preview: required
+
+  notion.append_blocks:
+    risk: medium
+    groups: [all-employees]
+    connections: ["user:*/notion-oauth", company/notion-oauth]
+    approval: named
+    preview: required
+
+  notion.update_page_property:
+    risk: medium
+    groups: [all-employees]
+    connections: ["user:*/notion-oauth", company/notion-oauth]
+    approval: named
+    preview: required

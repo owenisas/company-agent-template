@@ -12,10 +12,12 @@ connection strings. Secrets come from the deployment secret system only
 | `github_readonly` | `github_readonly.py` | `repo.metadata`, `file.read`, `issues.list` | D042 / D051 / D063 |
 | `crm_readonly` | `crm_readonly.py` | `record.read`, `stage.get`, `renewal.read` | D020 / D063 |
 | `notion_readonly` | `notion_readonly.py` | `pages.list`, `databases.list`, `page.read`, `comments.list` | D025 / D063 |
+| `notion_collab` | `notion_collab.py` | `notion.read_page`, `notion.search`, `notion.query_database`, `notion.create_page`, `notion.append_blocks`, `notion.update_page_property` | public OAuth; writes preview+approval |
 
 Notion is the first company-context importer: notes, docs, and meeting
-records in an allowlisted workspace/page scope. The default connector
-refuses every action until D025 closes and a secret is bound server-side.
+records in an allowlisted workspace/page scope. The read-only importer
+still refuses live ingest until D025. Collaboration uses the shared
+server-side OAuth client in `packages.notion`.
 
 ## Later company-context importers
 

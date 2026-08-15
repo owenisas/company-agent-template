@@ -148,6 +148,42 @@ CAPABILITIES: dict[str, dict] = {
         "approval": "named",
         "effect": "allow",
     },
+    Scope.NOTION_READ_PAGE: {
+        "risk": RiskTier.R0,
+        "groups": frozenset({"all-employees"}),
+        "approval": "none",
+        "effect": "allow",
+    },
+    Scope.NOTION_SEARCH: {
+        "risk": RiskTier.R0,
+        "groups": frozenset({"all-employees"}),
+        "approval": "none",
+        "effect": "allow",
+    },
+    Scope.NOTION_QUERY_DATABASE: {
+        "risk": RiskTier.R0,
+        "groups": frozenset({"all-employees"}),
+        "approval": "none",
+        "effect": "allow",
+    },
+    Scope.NOTION_CREATE_PAGE: {
+        "risk": RiskTier.R2,
+        "groups": frozenset({"all-employees"}),
+        "approval": "named",
+        "effect": "approval_required",
+    },
+    Scope.NOTION_APPEND_BLOCKS: {
+        "risk": RiskTier.R2,
+        "groups": frozenset({"all-employees"}),
+        "approval": "named",
+        "effect": "approval_required",
+    },
+    Scope.NOTION_UPDATE_PAGE_PROPERTY: {
+        "risk": RiskTier.R2,
+        "groups": frozenset({"all-employees"}),
+        "approval": "named",
+        "effect": "approval_required",
+    },
 }
 
 KNOWN_CONNECTIONS: frozenset[str] = frozenset(
@@ -166,6 +202,8 @@ KNOWN_CONNECTIONS: frozenset[str] = frozenset(
         Scope.CONN_EMAIL,
         Scope.CONN_SOCIAL,
         Scope.CONN_DISCORD,
+        Scope.CONN_NOTION_OAUTH,
+        Scope.CONN_NOTION_OAUTH_PREFIX,
     }
 )
 

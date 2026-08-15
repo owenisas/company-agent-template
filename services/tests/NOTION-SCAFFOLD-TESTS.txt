@@ -1,0 +1,29 @@
+Notion collaboration scaffold — offline suite
+
+Command:
+  uv venv /tmp/notionvenv
+  VIRTUAL_ENV=/tmp/notionvenv uv pip install pytest pydantic fastapi httpx
+  cd services && /tmp/notionvenv/bin/python -m pytest tests/ -x -q
+
+Result: PASSED
+Collected: 101 tests
+  tests/test_approval.py: 7
+  tests/test_attribution.py: 7
+  tests/test_authz.py: 16
+  tests/test_capabilities.py: 5
+  tests/test_citations.py: 5
+  tests/test_config.py: 4
+  tests/test_connections.py: 3
+  tests/test_connectors.py: 7
+  tests/test_no_secrets_in_context.py: 3
+  tests/test_notion_client.py: 6
+  tests/test_notion_collab.py: 10
+  tests/test_notion_oauth.py: 7
+  tests/test_preview_apply.py: 5
+  tests/test_readonly_mcps.py: 2
+  tests/test_retrieval_acl.py: 10
+  tests/test_separation.py: 4
+
+Secret scan (source tree, excluding .git/.venv): no live ntn_/nrt_/secret_
+tokens or NOTION_CLIENT_SECRET= values. Hits were only fixture strings
+nrt_TESTREFRESHVALUE in tests/test_notion_oauth.py.

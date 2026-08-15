@@ -27,6 +27,7 @@
       <nav class="nav" aria-label="Sections">
         <button type="button" class="nav-item is-active" data-view="chat">Chat</button>
         <button type="button" class="nav-item" data-view="usage">Usage</button>
+        <button type="button" class="nav-item" data-view="notion">Notion</button>
       </nav>
       <div class="rail-block">
         <p class="rail-label">Profile</p>
@@ -74,6 +75,21 @@
             </thead>
             <tbody id="usage-body"></tbody>
           </table>
+        </div>
+      </section>
+
+      <section id="view-notion" class="view view-notion" hidden aria-labelledby="notion-heading">
+        <header class="main-head">
+          <h2 id="notion-heading">Notion</h2>
+          <p class="main-sub">Connect a workspace so the agent can read and propose edits. Tokens stay on this host.</p>
+        </header>
+        <div class="panel">
+          <p id="notion-status" class="lede">Checking connection…</p>
+          <p id="notion-detail" class="main-sub"></p>
+          <div class="composer-row">
+            <a id="notion-connect" class="btn-primary" href="/api/notion/connect">Connect Notion</a>
+            <button type="button" id="notion-disconnect" class="btn-quiet" hidden>Disconnect</button>
+          </div>
         </div>
       </section>
     </main>

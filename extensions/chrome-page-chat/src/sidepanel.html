@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Company Page Chat</title>
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+  <header class="head">
+    <p class="brand">Company Page Chat</p>
+    <p class="lede">Ask the company agent about the tab you are looking at. v1 is read-only.</p>
+  </header>
+
+  <section class="card" id="config">
+    <h2>Backend</h2>
+    <label for="backendUrl">Backend URL</label>
+    <input id="backendUrl" type="text" spellcheck="false" value="http://127.0.0.1:9120" />
+    <label for="profile">Hermes profile</label>
+    <input id="profile" type="text" spellcheck="false" placeholder="company-user-a" />
+    <p class="hint">Snapshot is sent only to this backend. Session stays in local extension storage.</p>
+  </section>
+
+  <section class="card" id="auth">
+    <h2>Login</h2>
+    <label for="username">Username</label>
+    <input id="username" type="text" autocomplete="username" />
+    <label for="password">Password</label>
+    <input id="password" type="password" autocomplete="current-password" />
+    <div class="row">
+      <button type="button" class="btn-primary" id="loginBtn">Login</button>
+      <button type="button" class="btn-quiet" id="logoutBtn">Log out</button>
+    </div>
+    <p class="status" id="authStatus">Not logged in.</p>
+  </section>
+
+  <section class="card" id="ask">
+    <h2>This page</h2>
+    <p class="page-meta" id="pageMeta">Open a normal web tab, then ask.</p>
+    <label for="question">Question</label>
+    <textarea id="question" rows="4" placeholder="What is this page about?"></textarea>
+    <div class="row">
+      <button type="button" class="btn-primary" id="askBtn">Ask about this page</button>
+    </div>
+    <p class="status" id="askStatus"></p>
+    <div class="answer" id="answer" hidden>
+      <h3>Answer</h3>
+      <div class="answer-body" id="answerBody"></div>
+    </div>
+  </section>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>

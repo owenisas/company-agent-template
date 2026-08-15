@@ -27,6 +27,13 @@ _READ_ACTIONS = frozenset(
         "record.read",
         "stage.get",
         "renewal.read",
+        "notion.read_page",
+        "notion.search",
+        "notion.query_database",
+        "page.read",
+        "pages.list",
+        "databases.list",
+        "comments.list",
     }
 )
 

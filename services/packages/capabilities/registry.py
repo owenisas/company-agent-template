@@ -24,6 +24,11 @@ POLICY_VERSION = "1.0.0"
 # Narrow toolsets for Phase 3 shared read-only MCPs (spec 13.2, §3876).
 _GITHUB_READ_TOOLS = ("repo.metadata", "file.read", "issues.list")
 _CRM_READ_TOOLS = ("record.read", "stage.get", "renewal.read")
+_NOTION_READ_TOOLS = (
+    Scope.NOTION_READ_PAGE,
+    Scope.NOTION_SEARCH,
+    Scope.NOTION_QUERY_DATABASE,
+)
 
 _YAML_CONNECTIONS: dict[str, tuple[str, ...]] = {
     Scope.KNOWLEDGE_SEARCH: ("company/knowledge",),
@@ -31,11 +36,23 @@ _YAML_CONNECTIONS: dict[str, tuple[str, ...]] = {
     Scope.CRM_ACCOUNT_READ: ("company/crm-readonly",),
     Scope.CRM_OPPORTUNITY_UPDATE: ("user:*/crm-oauth", "team:revenue/crm-automation"),
     Scope.PUBLISHING_SEND: ("company/email-platform", "company/social-brand"),
+    Scope.NOTION_READ_PAGE: ("company/notion-oauth", "user:*/notion-oauth"),
+    Scope.NOTION_SEARCH: ("company/notion-oauth", "user:*/notion-oauth"),
+    Scope.NOTION_QUERY_DATABASE: ("company/notion-oauth", "user:*/notion-oauth"),
+    Scope.NOTION_CREATE_PAGE: ("user:*/notion-oauth", "company/notion-oauth"),
+    Scope.NOTION_APPEND_BLOCKS: ("user:*/notion-oauth", "company/notion-oauth"),
+    Scope.NOTION_UPDATE_PAGE_PROPERTY: ("user:*/notion-oauth", "company/notion-oauth"),
 }
 
 _TOOLSETS: dict[str, tuple[str, ...]] = {
     Scope.GITHUB_READ: _GITHUB_READ_TOOLS,
     Scope.CRM_ACCOUNT_READ: _CRM_READ_TOOLS,
+    Scope.NOTION_READ_PAGE: (Scope.NOTION_READ_PAGE,),
+    Scope.NOTION_SEARCH: (Scope.NOTION_SEARCH,),
+    Scope.NOTION_QUERY_DATABASE: (Scope.NOTION_QUERY_DATABASE,),
+    Scope.NOTION_CREATE_PAGE: (Scope.NOTION_CREATE_PAGE,),
+    Scope.NOTION_APPEND_BLOCKS: (Scope.NOTION_APPEND_BLOCKS,),
+    Scope.NOTION_UPDATE_PAGE_PROPERTY: (Scope.NOTION_UPDATE_PAGE_PROPERTY,),
 }
 
 _PREVIEW_REQUIRED = frozenset(
@@ -46,6 +63,9 @@ _PREVIEW_REQUIRED = frozenset(
         Scope.CONTRACTS_SIGN,
         Scope.FINANCE_PAYMENT,
         Scope.GITHUB_PROTECTED_MERGE,
+        Scope.NOTION_CREATE_PAGE,
+        Scope.NOTION_APPEND_BLOCKS,
+        Scope.NOTION_UPDATE_PAGE_PROPERTY,
     }
 )
 
@@ -60,6 +80,9 @@ _EXTERNAL_WRITE = frozenset(
         Scope.FINANCE_PAYMENT,
         Scope.DISCORD_SEND,
         Scope.KNOWLEDGE_FORGET,
+        Scope.NOTION_CREATE_PAGE,
+        Scope.NOTION_APPEND_BLOCKS,
+        Scope.NOTION_UPDATE_PAGE_PROPERTY,
     }
 )
 
