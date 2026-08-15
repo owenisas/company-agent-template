@@ -175,5 +175,57 @@ host login, not the long-term IdP.
 
 ## Moving a Pi one-host install to this VPS
 
-See `scripts/migrate-from-pi.sh`. Generic rsync of profiles, env, and
-data dirs. Review D050 before mapping legacy profiles onto `employee-*`.
+See `scripts/migrate-from-pi.sh` (`--dry-run` is the default; `--apply`
+to copy). Generic rsync of profiles, env, data dirs, the company
+dashboard-auth plugin, built `hermes_cli/web_dist/`, and the
+`hermes-dashboard` / `hermes-serve` user units. Review D050 before
+mapping legacy profiles onto `employee-*`.
+
+### Dashboard + serve split (carry per-person login)
+
+A current one-host appliance typically runs two systemd **user** units
+(linger enabled):
+
+| Unit | Command | Role |
+|---|---|---|
+| `hermes-dashboard.service` | `hermes dashboard --host 0.0.0.0 --port 9119 --skip-build --no-open` | browser UI |
+| `hermes-serve.service` | `hermes serve --host 0.0.0.0 --port 9120 --skip-build` | headless backend |
+
+Per-person dashboard login is the `company` DashboardAuthProvider:
+
+- Plugin: `~/.hermes/hermes-agent/plugins/dashboard_auth/company/`
+  (same fork path on the VPS; prefer `git pull` of the hermes-agent
+  fork that already contains this plugin, rsync only as fallback)
+- User store: `~/.hermes/dashboard-users.json` (**mode 0600**; scp
+  out of band, never git, never this script's apply path)
+- Config: `dashboard.company_auth.users_file` in `~/.hermes/config.yaml`
+
+**Do not overwrite the whole `config.yaml` blindly.** The migrate script
+writes a sidecar `config.yaml.from-pi`. Merge only the `dashboard.*`
+section (at least `dashboard.company_auth.*`) into the live VPS config
+and rewrite `users_file` if the Hermes home path changed.
+
+`--skip-build` means the VPS must already have `hermes_cli/web_dist/`.
+Either keep the rsync of that tree or, with node present, rebuild:
+
+```bash
+cd ~/.hermes/hermes-agent && npm run build
+# or run `hermes dashboard` once without --skip-build
+```
+
+After the units land, rewrite `ExecStart` / `HOME` / `PATH` for the VPS
+user, then:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now hermes-dashboard.service hermes-serve.service
+loginctl enable-linger "$USER"
+```
+
+Out-of-band password store:
+
+```bash
+scp <remote-user>@<pi-host>:<hermes-home>/dashboard-users.json \
+    ~/.hermes/dashboard-users.json
+chmod 0600 ~/.hermes/dashboard-users.json
+```
