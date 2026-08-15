@@ -1,7 +1,9 @@
 # Specialist wrapper catalog
-# Spec 18.2 (router pin) and 18.7 (wrapper manifest format).
-# D041 (first specialist roster) is open — wrappers below are format
-# examples with TODO pins, not an approved production roster.
+# Spec 18.2 (router pin), 18.6 (curated packs), 18.7 (wrapper format),
+# Appendix A (first roster), Phase 4 §4490.
+# D041 (first specialist roster) is open — wrappers below are the proposed
+# Phase 4 business roster with TODO pins, not an approved production set.
+# Existing legal.document-review wrapper is preserved.
 
 router:
   id: agency-agents-router
@@ -18,13 +20,17 @@ router:
     generated_plugin: plugins/agency-agents-router
     strategy: internal-artifact-from-pinned-sha
     note: Do not clone arbitrary upstream HEAD onto user workstations (spec 18.5).
+  documentation: specialists/ROUTER.md
 
 wrappers:
+  # --- Contract / legal (existing; do not rename) ---
   - id: legal.document-review
+    domain: contract
+    pack: legal-compliance
     source:
       repository: msitarzewski/agency-agents
-      slug: "TODO: <UPSTREAM_SLUG>"
-      commit: "TODO: <PINNED_SHA>"
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
     policy_overlay: specialists/overlays/legal-document-review.yaml
     tool_allowlist:
       - kb_search
@@ -43,3 +49,461 @@ wrappers:
       create_internal_draft: automatic
       send_redline: legal_approval_required
       sign: forbidden
+
+  - id: legal.compliance-checker
+    domain: contract
+    pack: legal-compliance
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/legal-compliance-checker.yaml
+    tool_allowlist:
+      - kb_search
+      - kb_get_document
+      - contract_get
+    tool_denylist:
+      - contract_sign
+      - payment_create
+      - privilege_change
+      - external_message_send
+    record_scope:
+      read: [contract, policy, legal_matter]
+      write: [compliance_finding]
+    approval_gates:
+      first_pass_review: automatic
+      issue_external_opinion: legal_approval_required
+      waive_requirement: forbidden
+
+  # --- Lead-to-cash / revenue + CRM ---
+  - id: revenue.outbound-strategist
+    domain: lead-to-cash
+    pack: revenue-crm
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/revenue-outbound-strategist.yaml
+    tool_allowlist:
+      - kb_search
+      - crm_account_read
+      - crm_opportunity_read
+    tool_denylist:
+      - external_message_send
+      - publishing_company_send
+      - crm_opportunity_update
+    record_scope:
+      read: [account, contact, opportunity, sequence_draft]
+      write: [outreach_plan]
+    approval_gates:
+      draft_sequence: automatic
+      send_outbound: campaign_owner_approval_required
+    notes: "Autonomous external send disabled at launch (spec 8). D020/D024."
+
+  - id: revenue.discovery-coach
+    domain: lead-to-cash
+    pack: revenue-crm
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/revenue-discovery-coach.yaml
+    tool_allowlist:
+      - kb_search
+      - crm_account_read
+      - crm_opportunity_read
+    tool_denylist:
+      - crm_opportunity_update
+      - external_message_send
+    record_scope:
+      read: [account, opportunity, call_note]
+      write: [discovery_prep]
+    approval_gates:
+      prep_internal: automatic
+      write_crm: record_owner_approval_required
+
+  - id: revenue.deal-strategist
+    domain: lead-to-cash
+    pack: revenue-crm
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/revenue-deal-strategist.yaml
+    tool_allowlist:
+      - kb_search
+      - crm_account_read
+      - crm_opportunity_read
+      - contract_get
+    tool_denylist:
+      - contract_sign
+      - crm_opportunity_update
+      - payment_create
+    record_scope:
+      read: [account, opportunity, quote, contract]
+      write: [deal_plan]
+    approval_gates:
+      internal_plan: automatic
+      commercial_commit: legal_or_revenue_owner_required
+
+  - id: revenue.pipeline-analyst
+    domain: lead-to-cash
+    pack: revenue-crm
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/revenue-pipeline-analyst.yaml
+    tool_allowlist:
+      - kb_search
+      - crm_account_read
+      - crm_opportunity_read
+    tool_denylist:
+      - crm_opportunity_update
+      - bulk_export
+      - external_message_send
+    record_scope:
+      read: [account, opportunity, pipeline_snapshot]
+      write: [pipeline_analysis]
+    approval_gates:
+      read_analysis: automatic
+      bulk_export: customer_data_approval_required
+
+  - id: crm.architect
+    domain: lead-to-cash
+    pack: revenue-crm
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/crm-architect.yaml
+    tool_allowlist:
+      - kb_search
+      - crm_account_read
+    tool_denylist:
+      - privilege_change
+      - crm_schema_write
+      - payment_create
+    record_scope:
+      read: [crm_schema, field_map]
+      write: [schema_proposal]
+    approval_gates:
+      propose_schema: automatic
+      apply_schema: platform_and_revops_approval_required
+
+  # --- Campaign / marketing ---
+  - id: marketing.content-creator
+    domain: campaign
+    pack: marketing-distribution
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/marketing-content-creator.yaml
+    tool_allowlist:
+      - kb_search
+      - kb_get_document
+    tool_denylist:
+      - publishing_company_send
+      - external_message_send
+    record_scope:
+      read: [brand_guide, campaign, approved_claim]
+      write: [content_draft]
+    approval_gates:
+      draft: automatic
+      publish: campaign_owner_approval_required
+
+  - id: marketing.email-strategist
+    domain: campaign
+    pack: marketing-distribution
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/marketing-email-strategist.yaml
+    tool_allowlist:
+      - kb_search
+      - crm_account_read
+    tool_denylist:
+      - publishing_company_send
+      - external_message_send
+    record_scope:
+      read: [campaign, audience_summary, email_template]
+      write: [campaign_plan, email_draft]
+    approval_gates:
+      draft: automatic
+      send: campaign_owner_approval_required
+    notes: "D023/D024 channel list open. No autonomous send."
+
+  - id: marketing.multi-platform-publisher
+    domain: campaign
+    pack: marketing-distribution
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/marketing-multi-platform-publisher.yaml
+    tool_allowlist:
+      - kb_search
+    tool_denylist:
+      - publishing_company_send
+      - external_message_send
+    record_scope:
+      read: [campaign, channel_policy]
+      write: [publish_preview]
+    approval_gates:
+      preview: automatic
+      publish: campaign_owner_approval_required
+      legal_claim: legal_approval_required
+
+  # --- Renewal / customer success ---
+  - id: customer.success-manager
+    domain: renewal
+    pack: customer-success
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/customer-success-manager.yaml
+    tool_allowlist:
+      - kb_search
+      - crm_account_read
+      - crm_renewal_read
+    tool_denylist:
+      - crm_opportunity_update
+      - contract_sign
+      - external_message_send
+      - bulk_export
+    record_scope:
+      read: [account, renewal, health_score, support_ticket]
+      write: [health_review, renewal_plan]
+    approval_gates:
+      internal_review: automatic
+      customer_message: record_owner_approval_required
+      commercial_change: revenue_or_legal_approval_required
+
+  - id: customer.account-planner
+    domain: renewal
+    pack: customer-success
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/customer-account-planner.yaml
+    tool_allowlist:
+      - kb_search
+      - crm_account_read
+      - crm_renewal_read
+    tool_denylist:
+      - payment_create
+      - contract_sign
+      - bulk_export
+    record_scope:
+      read: [account, renewal, usage_summary]
+      write: [account_plan]
+    approval_gates:
+      draft_plan: automatic
+      commit_commercially: record_owner_approval_required
+
+  # --- Procure-to-pay / finance + ops ---
+  - id: finance.accounts-payable
+    domain: procure-to-pay
+    pack: finance-ops
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/finance-accounts-payable.yaml
+    tool_allowlist:
+      - kb_search
+      - invoice_get
+      - vendor_get
+    tool_denylist:
+      - payment_create
+      - bank_detail_change
+      - contract_sign
+    record_scope:
+      read: [invoice, vendor, purchase_order]
+      write: [payment_draft, exception_note]
+    approval_gates:
+      prepare_payment: automatic
+      execute_payment: forbidden
+      change_bank_details: forbidden
+    notes: "R4 two-person finance-approvers. D012/D018/D022 open."
+
+  - id: finance.fpa-analyst
+    domain: procure-to-pay
+    pack: finance-ops
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/finance-fpa-analyst.yaml
+    tool_allowlist:
+      - kb_search
+      - invoice_get
+    tool_denylist:
+      - payment_create
+      - bulk_export
+    record_scope:
+      read: [budget, invoice_summary, forecast]
+      write: [fpa_memo]
+    approval_gates:
+      internal_memo: automatic
+      external_disclosure: finance_approval_required
+
+  - id: finance.bookkeeper
+    domain: procure-to-pay
+    pack: finance-ops
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/finance-bookkeeper.yaml
+    tool_allowlist:
+      - kb_search
+      - invoice_get
+      - vendor_get
+    tool_denylist:
+      - payment_create
+      - bank_detail_change
+    record_scope:
+      read: [invoice, ledger_summary, vendor]
+      write: [bookkeeping_draft]
+    approval_gates:
+      draft_entry: automatic
+      post_ledger: finance_approval_required
+
+  # --- Code release / engineering ---
+  - id: engineering.code-reviewer
+    domain: code-release
+    pack: engineering-security
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/engineering-code-reviewer.yaml
+    tool_allowlist:
+      - kb_search
+      - github_file_read
+      - github_pr_read
+    tool_denylist:
+      - github_protected_branch_merge
+      - privilege_change
+    record_scope:
+      read: [pull_request, file, ci_status]
+      write: [review_comment_draft]
+    approval_gates:
+      review_comment: automatic
+      merge_protected: repository_protection_required
+
+  - id: engineering.devops
+    domain: code-release
+    pack: engineering-security
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/engineering-devops.yaml
+    tool_allowlist:
+      - kb_search
+      - github_file_read
+    tool_denylist:
+      - github_protected_branch_merge
+      - production_deploy
+      - privilege_change
+    record_scope:
+      read: [release_manifest, compose_file, ci_status]
+      write: [release_pr, runbook_note]
+    approval_gates:
+      open_release_pr: automatic
+      promote_stable: two_reviewer_approval_required
+      apply_production: platform_ops_approval_required
+
+  - id: engineering.security
+    domain: code-release
+    pack: engineering-security
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/engineering-security.yaml
+    tool_allowlist:
+      - kb_search
+      - github_file_read
+    tool_denylist:
+      - privilege_change
+      - secret_read
+      - production_deploy
+    record_scope:
+      read: [pull_request, policy, finding]
+      write: [security_finding]
+    approval_gates:
+      report_finding: automatic
+      exception: platform_ops_and_security_required
+
+  # --- Research ---
+  - id: research.trend-researcher
+    domain: research
+    pack: research
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/research-trend-researcher.yaml
+    tool_allowlist:
+      - kb_search
+      - kb_get_document
+      - web_search
+    tool_denylist:
+      - knowledge_promote_company_claim
+      - publishing_company_send
+    record_scope:
+      read: [note, evidence, claim]
+      write: [research_packet]
+    approval_gates:
+      packet: automatic
+      promote_claim: knowledge_owner_approval_required
+
+  - id: research.competitive-analyst
+    domain: research
+    pack: research
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/research-competitive-analyst.yaml
+    tool_allowlist:
+      - kb_search
+      - kb_get_document
+      - web_search
+    tool_denylist:
+      - knowledge_promote_company_claim
+      - external_message_send
+    record_scope:
+      read: [note, evidence, competitor_source]
+      write: [research_packet]
+    approval_gates:
+      packet: automatic
+      promote_claim: knowledge_owner_approval_required
+
+  - id: research.report-writer
+    domain: research
+    pack: research
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>  # D041"
+      commit: "TODO: <PINNED_SHA>  # D041"
+    policy_overlay: specialists/overlays/research-report-writer.yaml
+    tool_allowlist:
+      - kb_search
+      - kb_get_document
+    tool_denylist:
+      - knowledge_promote_company_claim
+      - publishing_company_send
+    record_scope:
+      read: [research_packet, claim]
+      write: [report_draft]
+    approval_gates:
+      draft: automatic
+      publish: campaign_or_knowledge_owner_required

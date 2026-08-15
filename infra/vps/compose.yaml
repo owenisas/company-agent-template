@@ -203,3 +203,20 @@ services:
 
 volumes:
   postgres_data:
+
+# ---------------------------------------------------------------------------
+# Phase 5 observability (not started)
+# TODO provider: pin a collector image digest (OpenTelemetry Collector,
+# Grafana Alloy, or Promtail+Loki) before enabling.
+# Bind loopback only. See docs/hardening/CAPACITY.md and spec 30.3 / 30.5.
+# Later: docker compose --profile observability up -d
+#
+#  otel-collector:
+#    profiles: ["observability"]
+#    image: otel/opentelemetry-collector-contrib:<PINNED_VERSION>@sha256:<DIGEST>
+#    command: ["--config=/etc/otelcol/config.yaml"]
+#    ports:
+#      - "127.0.0.1:4317:4317"
+#      - "127.0.0.1:4318:4318"
+#    restart: unless-stopped
+# ---------------------------------------------------------------------------

@@ -22,7 +22,8 @@ A publishable starting tree:
 - `infra/` — Compose + systemd unit templates
 - `infra/vps/` — Ubuntu VPS bootstrap + Phase 2 knowledge Compose stack
 - `docs/MIGRATION-VPS.md` — appliance → VPS cutover runbook
-- `scripts/` — VPS bootstrap and Pi→VPS migrate helper
+- `docs/hardening/` — Phase 5 SSO, secrets, backup/DR, retention, capacity
+- `scripts/` — VPS bootstrap, appliance→VPS migrate helper, hardening/backup.sh
 - `webui/` — login-protected profile chat (runtime users, not in git)
 
 ## Layout
