@@ -1,0 +1,71 @@
+# Initial plugin set (spec 20.3) plus registry entries (spec 20.5).
+# Agency Agents router is not vendored until a reviewed upstream SHA exists
+# (spec 18.2). Pin fields are TODO (DECISIONS-NEEDED D041).
+# Plugins are opt-in. A discovered but disabled plugin is not assumed safe
+# (spec 20.2).
+version: 0.1.0
+channel: working
+
+initial_set:
+  - id: agency-agents-router
+    purpose: Lazy specialist search/load/delegation
+    data_credential_boundary: No business credential
+    enabled_in_config: true
+    vendored: false
+    pin: TODO
+  - id: company-audit
+    purpose: Add trace context and emit redacted events
+    data_credential_boundary: Audit write token only, ideally through local collector
+    enabled_in_config: true
+    vendored: true
+    pin: TODO
+  - id: company-release-info
+    purpose: Report installed release manifest
+    data_credential_boundary: Read-only local manifest
+    enabled_in_config: false
+    vendored: true
+    pin: TODO
+  - id: company-policy-context
+    purpose: Expose resolved non-secret policy metadata
+    data_credential_boundary: No secret; policy read only
+    enabled_in_config: false
+    vendored: true
+    pin: TODO
+
+registry:
+  plugins:
+    - id: agency-agents-router
+      version: "TODO: <INTERNAL_VERSION>"
+      source_sha: "TODO: <UPSTREAM_SHA>"
+      artifact_sha256: "TODO: <ARTIFACT_SHA>"
+      enabled_channels: [testing, stable]
+      owner: agent-platform
+      network_access: false
+      credential_access: none
+
+    - id: company-audit
+      version: 0.1.0
+      source_sha: "TODO: <COMPANY_SHA>"
+      artifact_sha256: "TODO: <ARTIFACT_SHA>"
+      enabled_channels: [testing, stable]
+      owner: security-operations
+      network_access: otel-only
+      credential_access: audit-write-token
+
+    - id: company-release-info
+      version: 0.1.0
+      source_sha: "TODO: <COMPANY_SHA>"
+      artifact_sha256: "TODO: <ARTIFACT_SHA>"
+      enabled_channels: [working, testing, stable]
+      owner: agent-platform
+      network_access: false
+      credential_access: none
+
+    - id: company-policy-context
+      version: 0.1.0
+      source_sha: "TODO: <COMPANY_SHA>"
+      artifact_sha256: "TODO: <ARTIFACT_SHA>"
+      enabled_channels: [working, testing, stable]
+      owner: agent-platform
+      network_access: false
+      credential_access: none

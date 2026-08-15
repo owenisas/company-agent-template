@@ -1,0 +1,14 @@
+# Spec 18.7 example overlay. Not a permission grant. First-pass only.
+# Legal sign remains forbidden (policies/capabilities.yaml).
+version: 1.0.0
+instructions: specialists/overlays/legal-document-review.md
+available_to:
+  - role: founder
+  - team: legal
+requirements:
+  jurisdiction: required
+  citations: required
+  uncertainty_statement: required
+memory:
+  personal_memory: false
+  matter_scoped_context: true

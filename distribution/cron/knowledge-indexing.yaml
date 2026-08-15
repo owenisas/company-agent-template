@@ -1,0 +1,13 @@
+# Automation catalog entry. Spec 15.6.
+# Profile: automation. Not installed into a live profile in Phase 1a.
+# Spec 15.6. Typical trigger every 15-60 minutes or event.
+name: knowledge-indexing
+enabled: false
+profile: automation
+trigger:
+  type: interval
+  value: "30m"
+authority: "Read/write knowledge index only"
+output: "Ingestion status and errors"
+approval_gate: "none"
+external_write: false

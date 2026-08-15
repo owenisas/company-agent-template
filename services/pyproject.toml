@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "company-agent-services"
+version = "0.3.0"
+description = "<Company> company agent services — Phase 3 shared-capabilities scaffold (credential-free)"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "company-hermes", email = "hermes@<company-domain>" }]
+dependencies = [
+  "fastapi",
+  "pydantic>=2",
+  "uvicorn",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+# SQLAlchemy / httpx / MCP SDK / asyncpg are deferred until D055/D057.
+# They are not required for the offline scaffold tests.
+
+[tool.setuptools.packages.find]
+include = ["apps*", "packages*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"

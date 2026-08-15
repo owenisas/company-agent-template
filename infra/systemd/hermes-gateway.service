@@ -1,0 +1,20 @@
+[Unit]
+Description=Company Hermes gateway (<profile>)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=<service-user>
+Group=<service-user>
+WorkingDirectory=/opt/company-agent
+EnvironmentFile=-/opt/company-agent/.env
+# Bind to localhost / private interface only.
+ExecStart=/usr/local/bin/hermes -p <profile> gateway
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

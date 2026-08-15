@@ -1,0 +1,45 @@
+# Specialist wrapper catalog
+# Spec 18.2 (router pin) and 18.7 (wrapper manifest format).
+# D041 (first specialist roster) is open — wrappers below are format
+# examples with TODO pins, not an approved production roster.
+
+router:
+  id: agency-agents-router
+  source:
+    repository: https://github.com/msitarzewski/agency-agents.git
+    commit: "TODO: <REVIEWED_40_CHARACTER_COMMIT_SHA>"
+    license: MIT
+    integration: hermes
+  reviewed_at: TODO
+  reviewed_by:
+    - "TODO: <REVIEWER_1>"
+    - "TODO: <REVIEWER_2>"
+  install:
+    generated_plugin: plugins/agency-agents-router
+    strategy: internal-artifact-from-pinned-sha
+    note: Do not clone arbitrary upstream HEAD onto user workstations (spec 18.5).
+
+wrappers:
+  - id: legal.document-review
+    source:
+      repository: msitarzewski/agency-agents
+      slug: "TODO: <UPSTREAM_SLUG>"
+      commit: "TODO: <PINNED_SHA>"
+    policy_overlay: specialists/overlays/legal-document-review.yaml
+    tool_allowlist:
+      - kb_search
+      - kb_get_document
+      - contract_get
+      - contract_create_internal_review
+    tool_denylist:
+      - contract_sign
+      - payment_create
+      - external_message_send
+    record_scope:
+      read: [contract, legal_matter, vendor]
+      write: [review_finding, draft_redline]
+    approval_gates:
+      first_pass_review: automatic
+      create_internal_draft: automatic
+      send_redline: legal_approval_required
+      sign: forbidden

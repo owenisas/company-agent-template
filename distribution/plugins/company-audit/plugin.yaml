@@ -1,0 +1,6 @@
+name: company-audit
+version: 0.1.0
+description: "Add trace context and emit redacted audit events. No business credentials."
+author: "TODO: <COMPANY_LEGAL_NAME>"
+kind: hook
+enabled_by_default: false

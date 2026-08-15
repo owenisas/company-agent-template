@@ -1,0 +1,37 @@
+Phase 2 scaffold offline tests
+Repo: /home/hermes_pi/workspace/company-agent-services
+Date: 2026-08-14
+Command:
+
+  /tmp/p2fix2/bin/python -m pytest tests/ -x -q
+
+Scratch venv (not system-wide):
+
+  uv venv /tmp/p2fix2
+  VIRTUAL_ENV=/tmp/p2fix2 uv pip install pytest pydantic fastapi
+
+Output:
+
+  .......................................                                  [100%]
+  39 passed in 0.46s
+
+Verdict: PASS (39 passed, exit 0)
+
+Also:
+
+  python3 -m py_compile $(find apps packages -name "*.py")
+  PY_COMPILE_OK
+
+No database created. No network. No services started.
+
+Audit-fix addendum (same day):
+  +6 tests (ACL slug deny, prefilter/claims-gate matrix, CAPABILITIES vs WRITE_SCOPES_BY_TIER).
+
+Parity-fix addendum (same day, service team/project):
+  app_prefilter_allows service branch now requires scope membership for
+  visibility in {team, project} (matches sql_rls_source_visible / 0009).
+  Matrix rows: service_team_member, service_team_non_member,
+  service_project_member, service_project_non_member.
+  build_acl_clause joins principals.external_id / scopes.slug; does not
+  compare owner_principal_id or scope_id (uuid) to slug binds.
+  Still 39 collected tests (matrix grew; no new test functions).

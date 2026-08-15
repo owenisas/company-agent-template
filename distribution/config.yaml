@@ -1,0 +1,93 @@
+# <Company> company profile config
+# Spec 16.6 (illustrative isolation + approval config).
+# Do not put secrets here. Resolve shared credentials server-side (spec 16.6).
+#
+# VALIDATION: Hermes Agent v0.20.1 (2026.8.13)
+# Commands used: `hermes --version`, `hermes config set --help`,
+# `hermes config get <key>`, `hermes mcp --help`, `hermes doctor --help`.
+# Source check: hermes_cli/config_defaults.py, hermes_cli/config.py
+# (_validate_config_key), hermes_cli/mcp_config.py.
+#
+# Keys verified present in v0.20.1 via `hermes config get <key>`:
+#   terminal.backend, terminal.home_mode, terminal.cwd, terminal.timeout,
+#   terminal.env_passthrough, terminal.docker_image,
+#   terminal.docker_mount_cwd_to_workspace, terminal.container_cpu,
+#   terminal.container_memory, terminal.container_disk,
+#   terminal.container_persistent, approvals.timeout, approvals.mode,
+#   memory.memory_enabled, memory.user_profile_enabled, memory.write_approval,
+#   skills.write_approval, plugins.enabled, security.redact_secrets,
+#   security.allow_lazy_installs, mcp_servers
+#
+# Adjustments vs spec 16.6:
+#   - Kept every 16.6 key; none dropped. All exist on v0.20.1.
+#   - MCP lives in this file (`mcp_servers`), not a separate mcp.json.
+#     v0.20.1 `hermes mcp` reads/writes config.yaml. Spec 16.2: omit
+#     mcp.json when it is not the release's config format.
+#   - mcp_servers.*.tools.include is valid on v0.20.1 (docs + mcp_catalog
+#     `_write_tools_include`). Kept from the 16.6 example.
+#   - terminal.backend remains docker per spec 16.6 even though docker is
+#     not installed on this Phase 1a authoring host.
+#   - docker_image is TODO: until a reviewed sandbox digest exists
+#     (DECISIONS-NEEDED D053). Placeholder is not a pullable pin.
+#   - Do not forward provider/gateway secrets into Docker
+#     (env_passthrough: []).
+#   - This file is a distribution template. Phase 1a does not install it
+#     into a live profile (Phase 1b).
+
+terminal:
+  backend: docker
+  cwd: "/workspace"
+  timeout: 300
+  home_mode: profile
+  env_passthrough: []
+  docker_image: "TODO: <COMPANY_SANDBOX_IMAGE>@sha256:<DIGEST>"
+  docker_mount_cwd_to_workspace: false
+  container_cpu: 2
+  container_memory: 6144
+  container_disk: 51200
+  container_persistent: true
+
+approvals:
+  timeout: 300
+  mode: smart
+
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  write_approval: true
+
+skills:
+  write_approval: true
+
+plugins:
+  enabled:
+    - agency-agents-router
+    - company-audit
+
+security:
+  redact_secrets: true
+  allow_lazy_installs: false
+
+mcp_servers:
+  company_kb:
+    url: "${COMPANY_KB_MCP_URL}"
+    headers:
+      Authorization: "Bearer ${COMPANY_KB_TOKEN}"
+      X-Company-Profile: "${COMPANY_PROFILE_ID}"
+    tools:
+      include:
+        - kb_search
+        - kb_get_document
+        - kb_ingest
+        - kb_create_research_packet
+        - kb_add_finding
+        - kb_feedback
+
+  company_approvals:
+    url: "${COMPANY_APPROVAL_URL}"
+    headers:
+      Authorization: "Bearer ${COMPANY_APPROVAL_TOKEN}"
+    tools:
+      include:
+        - approval_request
+        - approval_status

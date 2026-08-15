@@ -1,0 +1,13 @@
+# Automation catalog entry. Spec 15.6.
+# Profile: automation. Not installed into a live profile in Phase 1a.
+# Spec 15.6. Daily or source event. No publish.
+name: research-monitor
+enabled: false
+profile: automation
+trigger:
+  type: cron
+  value: "0 7 * * *"
+authority: "Read web and knowledge; no external write"
+output: "Internal finding packet"
+approval_gate: "none"
+external_write: false

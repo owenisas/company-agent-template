@@ -1,0 +1,13 @@
+# Automation catalog entry. Spec 15.6.
+# Profile: automation. Not installed into a live profile in Phase 1a.
+# Spec 15.6. Nightly. CRM name is TODO (D020).
+name: crm-hygiene
+enabled: false
+profile: automation
+trigger:
+  type: cron
+  value: "0 2 * * *"
+authority: "Read CRM; reversible task creation only"
+output: "Exceptions and suggested fixes"
+approval_gate: "record-owner for any CRM write"
+external_write: false

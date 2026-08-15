@@ -1,0 +1,13 @@
+# Automation catalog entry. Spec 15.6.
+# Profile: automation. Not installed into a live profile in Phase 1a.
+# Spec 15.6. On pull request/release.
+name: release-check
+enabled: false
+profile: automation
+trigger:
+  type: event
+  value: "pull_request_or_release"
+authority: "Read Git/CI, create checks"
+output: "Test/evaluation result"
+approval_gate: "none for checks; stable tag needs two humans (D017)"
+external_write: false

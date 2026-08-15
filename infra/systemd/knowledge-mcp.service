@@ -1,0 +1,19 @@
+[Unit]
+Description=Company knowledge-mcp
+After=network-online.target knowledge-api.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=<service-user>
+Group=<service-user>
+WorkingDirectory=/opt/company-agent/services
+EnvironmentFile=-/opt/company-agent/infra/.env
+ExecStart=/opt/company-agent/services/.venv/bin/python -m apps.knowledge_mcp.main
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

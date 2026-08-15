@@ -1,0 +1,58 @@
+=== Phase 1a validation ===
+host: <host>  hermes: Hermes Agent v0.20.1 (2026.8.13)
+
+--- (a) config.yaml keys vs installed Hermes ---
+PASS  hermes config get terminal.backend
+PASS  hermes config get terminal.home_mode
+PASS  hermes config get terminal.cwd
+PASS  hermes config get terminal.timeout
+PASS  hermes config get terminal.env_passthrough
+PASS  hermes config get terminal.docker_image
+PASS  hermes config get terminal.docker_mount_cwd_to_workspace
+PASS  hermes config get terminal.container_cpu
+PASS  hermes config get terminal.container_memory
+PASS  hermes config get terminal.container_disk
+PASS  hermes config get terminal.container_persistent
+PASS  hermes config get approvals.timeout
+PASS  hermes config get approvals.mode
+PASS  hermes config get memory.memory_enabled
+PASS  hermes config get memory.user_profile_enabled
+PASS  hermes config get memory.write_approval
+PASS  hermes config get skills.write_approval
+PASS  hermes config get plugins.enabled
+PASS  hermes config get security.redact_secrets
+PASS  hermes config get security.allow_lazy_installs
+PASS  hermes config get mcp_servers
+distribution config.yaml required values present
+PASS  distribution config.yaml required values
+
+--- (b) git diff --check ---
+PASS  git diff --check
+
+--- (c) secret scan ---
+pattern_hits=39 value_failures=0 placeholder_or_docs=39
+no real credential values detected
+PASS  secret scan (no credential values)
+
+--- (d) distribution.yaml parses ---
+ok <company> 0.1.0
+PASS  distribution.yaml parses
+
+--- (e) distribution_owned paths exist ---
+all distribution_owned paths exist
+PASS  distribution_owned paths
+
+--- (f) release manifest integrity (spec 36.6) ---
+PASS  manifest schema validation  jsonschema Draft 2020-12
+PASS  required fields present
+PASS  database_schema_revision is string  got str
+PASS  policy_bundle_sha256  bb6825dd66d99568e5fff90258a8dd2e8491169062d70798a0737e46a23d37bf
+PASS  plugins_manifest_sha256  6c4d9cd1b38b3a64fa7ab755a8a90a2825352861f2a9ebacd354a9f0d18de143
+PASS  skills_manifest_sha256  80ee21695bcc6e4d3bdfc2e9868b5a29db45cc94591f36677bbb8ddaf4415b19
+PASS  distribution_tree_sha256  ac0d660bf79a82333684ea99d910d84adf9fc96747e1bfe9558d546841d1169b
+INFO  unresolved_todo: distribution_git_sha, agency_agents_git_sha, hermes_image_digest, knowledge_image_digest, approved_by
+checks=7 failed=0
+Release verified (working-channel seed ok)
+PASS  verify-release.sh
+
+VERDICT: PASS

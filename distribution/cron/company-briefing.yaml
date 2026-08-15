@@ -1,0 +1,13 @@
+# Automation catalog entry. Spec 15.6.
+# Profile: automation. Not installed into a live profile in Phase 1a.
+# Spec 15.6. Weekday morning. Draft only.
+name: company-briefing
+enabled: false
+profile: automation
+trigger:
+  type: cron
+  value: "30 7 * * 1-5"
+authority: "Read approved systems"
+output: "Draft/internal briefing"
+approval_gate: "none"
+external_write: false

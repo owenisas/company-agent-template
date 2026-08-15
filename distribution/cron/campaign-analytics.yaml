@@ -1,0 +1,13 @@
+# Automation catalog entry. Spec 15.6.
+# Profile: automation. Not installed into a live profile in Phase 1a.
+# Spec 15.6. After campaign. TODO-deferred for Phase 2 publishing work.
+name: campaign-analytics
+enabled: false
+profile: automation
+trigger:
+  type: event
+  value: "after_campaign"
+authority: "Read analytics and campaign data"
+output: "Internal report"
+approval_gate: "none"
+external_write: false

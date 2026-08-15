@@ -1,0 +1,8 @@
+repository: https://github.com/msitarzewski/agency-agents.git
+commit: "TODO: <REVIEWED_40_CHARACTER_COMMIT_SHA>"
+license: MIT
+integration: hermes
+reviewed_at: TODO
+reviewed_by:
+  - "TODO: <REVIEWER_1>"
+  - "TODO: <REVIEWER_2>"

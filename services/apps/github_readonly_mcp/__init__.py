@@ -1,0 +1,1 @@
+"""github-readonly-mcp entrypoint."""

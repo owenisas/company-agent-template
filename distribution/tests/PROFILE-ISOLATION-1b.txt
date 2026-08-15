@@ -1,0 +1,81 @@
+=== Phase 1b profile isolation ===
+host: <host>  hermes: Hermes Agent v0.20.1 (2026.8.13)
+default home: /home/hermes_pi/.hermes
+
+--- (1) each profile has its own config, state, sessions, memories ---
+PASS  profile dir exists: default -> /home/hermes_pi/.hermes
+PASS  path exists (default): /home/hermes_pi/.hermes/config.yaml
+PASS  path exists (default): /home/hermes_pi/.hermes/memories
+PASS  path exists (default): /home/hermes_pi/.hermes/sessions
+  state.db path (default): /home/hermes_pi/.hermes/state.db [present]
+  .env path     (default): /home/hermes_pi/.hermes/.env [present]
+PASS  profile dir exists: automation -> /home/hermes_pi/.hermes/profiles/automation
+PASS  path exists (automation): /home/hermes_pi/.hermes/profiles/automation/config.yaml
+PASS  path exists (automation): /home/hermes_pi/.hermes/profiles/automation/memories
+PASS  path exists (automation): /home/hermes_pi/.hermes/profiles/automation/sessions
+  state.db path (automation): /home/hermes_pi/.hermes/profiles/automation/state.db [not created yet]
+  .env path     (automation): /home/hermes_pi/.hermes/profiles/automation/.env [present]
+PASS  profile dir exists: employee-a -> /home/hermes_pi/.hermes/profiles/employee-a
+PASS  path exists (employee-a): /home/hermes_pi/.hermes/profiles/employee-a/config.yaml
+PASS  path exists (employee-a): /home/hermes_pi/.hermes/profiles/employee-a/memories
+PASS  path exists (employee-a): /home/hermes_pi/.hermes/profiles/employee-a/sessions
+  state.db path (employee-a): /home/hermes_pi/.hermes/profiles/employee-a/state.db [not created yet]
+  .env path     (employee-a): /home/hermes_pi/.hermes/profiles/employee-a/.env [present]
+PASS  profile dir exists: employee-b -> /home/hermes_pi/.hermes/profiles/employee-b
+PASS  path exists (employee-b): /home/hermes_pi/.hermes/profiles/employee-b/config.yaml
+PASS  path exists (employee-b): /home/hermes_pi/.hermes/profiles/employee-b/memories
+PASS  path exists (employee-b): /home/hermes_pi/.hermes/profiles/employee-b/sessions
+  state.db path (employee-b): /home/hermes_pi/.hermes/profiles/employee-b/state.db [not created yet]
+  .env path     (employee-b): /home/hermes_pi/.hermes/profiles/employee-b/.env [present]
+PASS  profile dir exists: employee-c -> /home/hermes_pi/.hermes/profiles/employee-c
+PASS  path exists (employee-c): /home/hermes_pi/.hermes/profiles/employee-c/config.yaml
+PASS  path exists (employee-c): /home/hermes_pi/.hermes/profiles/employee-c/memories
+PASS  path exists (employee-c): /home/hermes_pi/.hermes/profiles/employee-c/sessions
+  state.db path (employee-c): /home/hermes_pi/.hermes/profiles/employee-c/state.db [not created yet]
+  .env path     (employee-c): /home/hermes_pi/.hermes/profiles/employee-c/.env [present]
+PASS  automation is separate from default
+
+--- (2) hermes -p resolves distinct config files ---
+PASS  hermes config path (default) = /home/hermes_pi/.hermes/config.yaml
+PASS  hermes config path (automation) = /home/hermes_pi/.hermes/profiles/automation/config.yaml
+PASS  hermes config path (employee-a) = /home/hermes_pi/.hermes/profiles/employee-a/config.yaml
+PASS  hermes config path (employee-b) = /home/hermes_pi/.hermes/profiles/employee-b/config.yaml
+PASS  hermes config path (employee-c) = /home/hermes_pi/.hermes/profiles/employee-c/config.yaml
+
+--- (3) memory sentinel isolation (v0.20.1 has no 'hermes memory set') ---
+PASS  sentinel written to automation MEMORY.md
+PASS  automation sentinel NOT visible in employee-a MEMORY.md
+PASS  automation sentinel NOT visible in employee-b MEMORY.md
+PASS  automation sentinel NOT visible in default MEMORY.md
+PASS  user-a sentinel NOT visible in automation MEMORY.md
+
+--- (4) config isolation (hash before/after setting a key) ---
+  user-a  sha256 before: bf9bca05f11dc092689e8ca457a1fc0a41317d1d5d0c9282b9d94d075029b475
+  auto    sha256 before: b11f301b39f5cff10d43f6497d6a94d05d76188475587432108a1f10778c77aa
+PASS  employee-a and automation configs already differ
+PASS  employee-a config hash differs from default
+✓ Set display.personality = phase1b-isolation-sentinel in /home/hermes_pi/.hermes/profiles/automation/config.yaml
+  auto    sha256 after:  c26c6f47e3dc8d7a6052327e6e5d113429105110fab02f948f2e24fbef55dc67
+  user-a  sha256 after:  bf9bca05f11dc092689e8ca457a1fc0a41317d1d5d0c9282b9d94d075029b475
+PASS  automation config hash changed after config set
+PASS  employee-a config hash unchanged
+PASS  employee-b config hash unchanged
+PASS  default config hash unchanged
+PASS  sentinel config value not visible from employee-a (got: empty)
+
+--- (5) credential / auth isolation ---
+PASS  automation has no auth.json
+PASS  automation .env has no real-looking credential keys
+PASS  employee-a has no auth.json
+PASS  employee-a .env has no real-looking credential keys
+PASS  employee-b has no auth.json
+PASS  employee-b .env has no real-looking credential keys
+PASS  employee-c has no auth.json
+PASS  employee-c .env has no real-looking credential keys
+PASS  default auth.json is not shared with automation
+
+--- (6) automation cron not live-scheduled ---
+PASS  automation has no cron/jobs.json
+PASS  hermes -p automation cron list reports no live jobs
+
+=== RESULT: PASS ===

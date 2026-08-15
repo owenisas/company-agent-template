@@ -1,0 +1,41 @@
+Phase 3 scaffold offline tests
+Repo: /home/hermes_pi/workspace/company-agent-services
+Date: 2026-08-14T18:42:11-07:00
+Command:
+
+  /tmp/p3venv/bin/python -m pytest tests/ -x -q
+
+Scratch venv (not system-wide):
+
+  uv venv /tmp/p3venv
+  VIRTUAL_ENV=/tmp/p3venv uv pip install pytest pydantic fastapi httpx
+
+Output:
+
+  .......................................................................  [100%]
+  71 passed (exit 0)
+
+Collect-only counts:
+  tests/test_approval.py: 7
+  tests/test_attribution.py: 7
+  tests/test_authz.py: 16
+  tests/test_capabilities.py: 5
+  tests/test_citations.py: 5
+  tests/test_config.py: 4
+  tests/test_connections.py: 3
+  tests/test_no_secrets_in_context.py: 3
+  tests/test_preview_apply.py: 5
+  tests/test_readonly_mcps.py: 2
+  tests/test_retrieval_acl.py: 10
+  tests/test_separation.py: 4
+
+Verdict: PASS (71 passed, exit 0)
+Prior Phase 2 suite: 39 tests still green; +32 Phase 3 tests.
+
+Also:
+
+  python3 -m py_compile $(find apps packages -name "*.py")
+  PY_COMPILE_OK
+
+No database created. No network. No services started. No Docker. No cron.
+Secret scan hits are placeholders/prose only (secret:// refs, deny-lists, comments).

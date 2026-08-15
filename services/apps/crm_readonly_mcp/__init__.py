@@ -1,0 +1,1 @@
+"""crm-readonly-mcp entrypoint."""

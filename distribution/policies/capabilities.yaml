@@ -1,0 +1,69 @@
+# Capability policy bundle
+# Spec 36.1. Company slug <company>. Named groups remain TODO until
+# DECISIONS-NEEDED D008–D014 close. Unknown capabilities deny (spec 36.1).
+version: 1.0.0
+
+defaults:
+  unknown_capability: deny
+  unknown_connection: deny
+  external_write: approval_required
+  bulk_export: approval_required
+
+capabilities:
+  knowledge.search:
+    risk: low
+    groups: [all-employees]
+    connections: [company/knowledge]
+    approval: none
+
+  knowledge.promote_company_claim:
+    risk: medium
+    groups: [research, executive]
+    approval: knowledge-owner
+
+  github.pull_request.create:
+    risk: medium
+    groups: [engineering]
+    connections:
+      - user:*/github-oauth
+      - company/github-hermes-bot
+    approval: none
+
+  # Risk labels: low=R0/R1, medium=R2, high=R3, critical=R4.
+  # github.protected_branch.merge is R3 (action-approval-matrix §3 Deploy), not R4.
+  github.protected_branch.merge:
+    risk: high
+    groups: [engineering]
+    approval: repository-protection
+
+  crm.account.read:
+    risk: low
+    groups: [revenue, customer-success, executive]
+    connections: [company/crm-readonly]
+    approval: none
+
+  crm.opportunity.update:
+    risk: high
+    groups: [revenue, executive]
+    connections:
+      - user:*/crm-oauth
+      - team:revenue/crm-automation
+    approval: record-owner
+    preview: required
+
+  publishing.company.send:
+    risk: high
+    groups: [marketing, executive]
+    connections: [company/email-platform, company/social-brand]
+    approval: campaign-owner
+    preview: required
+
+  legal.contract.sign:
+    risk: critical
+    groups: []
+    effect: deny
+
+  finance.payment.execute:
+    risk: critical
+    groups: []
+    effect: deny

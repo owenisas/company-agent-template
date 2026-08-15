@@ -1,0 +1,45 @@
+# Secrets and auth
+# Spec 16.3
+.env
+.env.*
+!.env.EXAMPLE
+auth.json
+*.pem
+*.key
+*.p12
+*.pfx
+
+# User state
+memories/
+sessions/
+logs/
+state.db*
+workspace/
+plans/
+home/
+local/
+*_cache/
+pending/
+
+# Browser and connector state
+browser*/
+.chrome/
+.chromium/
+credentials/
+tokens/
+
+# Build artifacts
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+dist/
+build/
+.DS_Store
+
+# Evidence and exports
+raw-notes/
+exports/
+attachments/
+*.dump
+*.sql

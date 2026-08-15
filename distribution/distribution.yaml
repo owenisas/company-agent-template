@@ -1,0 +1,38 @@
+# <Company> company Hermes profile distribution
+# Spec 16.2. Company slug <company>. Hermes validated: v0.20.1.
+# mcp.json omitted: v0.20.1 stores MCP under config.yaml mcp_servers
+# (spec 16.2: "Only include mcp.json when that matches the validated
+# Hermes release's configuration format").
+name: <company>
+version: 0.1.0
+description: "<Company> Hermes agent with governed research and business workflows"
+hermes_requires: ">=0.20.1"
+author: "TODO: <COMPANY_LEGAL_NAME>"
+license: "Proprietary - internal use"
+
+env_requires:
+  - name: COMPANY_KB_MCP_URL
+    description: "Private company knowledge MCP endpoint"
+    required: true
+  - name: COMPANY_KB_TOKEN
+    description: "Per-user short-lived or individually issued knowledge token"
+    required: true
+  - name: COMPANY_APPROVAL_URL
+    description: "Private approval service endpoint"
+    required: true
+  - name: COMPANY_PROFILE_ID
+    description: "Immutable profile identifier assigned during onboarding"
+    required: true
+
+distribution_owned:
+  - SOUL.md
+  - AGENTS.md
+  - config.yaml
+  - skills/
+  - plugins/
+  - cron/
+  - policies/
+  - specialists/
+  - runbooks/
+  - manifests/
+  - distribution.yaml

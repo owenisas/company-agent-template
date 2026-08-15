@@ -1,0 +1,19 @@
+# Spec 5.8 working-channel release seed. Not a stable promotion.
+# distribution_git_sha is TODO until the first push (spec 16.7).
+# platform_git_sha is company-agent-platform Phase 0 commit.
+release_id: company-agent-v0.1.0
+created_at: "2026-08-14T21:37:00Z"
+distribution_git_sha: "TODO: after first push"
+platform_git_sha: e6f22016e2db5de10bf3c5070d37b6de1f70d165
+agency_agents_git_sha: "TODO: <REVIEWED_40_CHARACTER_COMMIT_SHA>"
+hermes_image_digest: "TODO: sha256:<digest>"
+knowledge_image_digest: "TODO: sha256:<digest>"
+policy_bundle_sha256: bb6825dd66d99568e5fff90258a8dd2e8491169062d70798a0737e46a23d37bf
+skills_manifest_sha256: 80ee21695bcc6e4d3bdfc2e9868b5a29db45cc94591f36677bbb8ddaf4415b19
+plugins_manifest_sha256: 6c4d9cd1b38b3a64fa7ab755a8a90a2825352861f2a9ebacd354a9f0d18de143
+distribution_tree_sha256: ac0d660bf79a82333684ea99d910d84adf9fc96747e1bfe9558d546841d1169b
+eval_suite_version: 0.1.0
+database_schema_revision: "20260814_01"
+approved_by:
+  - "TODO: <PERSON_1>"
+  - "TODO: <PERSON_2>"

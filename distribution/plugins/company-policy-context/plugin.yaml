@@ -1,0 +1,6 @@
+name: company-policy-context
+version: 0.1.0
+description: "Expose resolved non-secret policy metadata. No secrets."
+author: "TODO: <COMPANY_LEGAL_NAME>"
+kind: tool
+enabled_by_default: false

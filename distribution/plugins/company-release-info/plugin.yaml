@@ -1,0 +1,6 @@
+name: company-release-info
+version: 0.1.0
+description: "Report the installed company release manifest. Read-only."
+author: "TODO: <COMPANY_LEGAL_NAME>"
+kind: tool
+enabled_by_default: false

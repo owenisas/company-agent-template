@@ -1,0 +1,13 @@
+# Automation catalog entry. Spec 15.6.
+# Profile: automation. Not installed into a live profile in Phase 1a.
+# Spec 15.6. Daily/weekly. Off-host target is TODO (D033).
+name: backup-verification
+enabled: false
+profile: automation
+trigger:
+  type: cron
+  value: "0 4 * * *"
+authority: "Backup metadata and restore-test target"
+output: "Success/failure alert"
+approval_gate: "platform-ops for restore onto anything but the test target"
+external_write: false

@@ -1,0 +1,82 @@
+# VPS Compose stack (template)
+# Images and published ports are placeholders. Do not pull an unpinned
+# image into production (D053). Postgres is gated on D055 / D056.
+
+name: company-agent
+
+services:
+  postgres:
+    # image: pgvector/pgvector:pg16@sha256:<DIGEST>   # TODO: D053 / D055
+    image: postgres:16
+    profiles: ["db"]
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../services/migrations:/docker-entrypoint-initdb.d:ro
+    # ports:
+    #   - "127.0.0.1:5432:5432"
+    restart: unless-stopped
+
+  knowledge-api:
+    # image: <COMPANY_KNOWLEDGE_IMAGE>@sha256:<DIGEST>
+    build:
+      context: ../services
+    command: ["python", "-m", "apps.knowledge_api.main"]
+    env_file: [.env]
+    depends_on: [postgres]
+    # ports:
+    #   - "127.0.0.1:8081:8081"
+    profiles: ["apps"]
+    restart: unless-stopped
+
+  knowledge-worker:
+    build:
+      context: ../services
+    command: ["python", "-m", "apps.knowledge_worker.main"]
+    env_file: [.env]
+    depends_on: [postgres]
+    profiles: ["apps"]
+    restart: unless-stopped
+
+  knowledge-mcp:
+    build:
+      context: ../services
+    command: ["python", "-m", "apps.knowledge_mcp.main"]
+    env_file: [.env]
+    depends_on: [knowledge-api]
+    # ports:
+    #   - "127.0.0.1:8082:8082"
+    profiles: ["apps"]
+    restart: unless-stopped
+
+  approval-api:
+    build:
+      context: ../services
+    command: ["python", "-m", "apps.approval_api.main"]
+    env_file: [.env]
+    # ports:
+    #   - "127.0.0.1:8083:8083"
+    profiles: ["apps"]
+    restart: unless-stopped
+
+  audit-consumer:
+    build:
+      context: ../services
+    command: ["python", "-m", "apps.audit_consumer.main"]
+    env_file: [.env]
+    profiles: ["apps"]
+    restart: unless-stopped
+
+  webui:
+    # image: <COMPANY_WEBUI_IMAGE>@sha256:<DIGEST>
+    # build: ../webui
+    profiles: ["webui"]
+    # ports:
+    #   - "127.0.0.1:8080:8080"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

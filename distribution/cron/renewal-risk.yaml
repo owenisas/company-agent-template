@@ -1,0 +1,13 @@
+# Automation catalog entry. Spec 15.6.
+# Profile: automation. Not installed into a live profile in Phase 1a.
+# Spec 15.6. Daily. No customer-facing send.
+name: renewal-risk
+enabled: false
+profile: automation
+trigger:
+  type: cron
+  value: "0 8 * * *"
+authority: "Read CRM/usage/support"
+output: "Internal risk report and tasks"
+approval_gate: "none for the report; tasks stay internal"
+external_write: false
